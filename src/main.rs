@@ -34,23 +34,33 @@ fn main() {
     };
     let mut line = String::new();
     loop {
-      eprintln!("Enter a path with file name:");
+      line.clear();
+      eprint!("Enter a path with file name:");
       std::io::stdin().read_line(&mut line);
+      if line.trim().len() == 0 {
+        line = info[which].name.clone();
+      }
       if check_file_exists(line.trim()) {
-        eprintln!("Already exists.");
-        continue;
+        eprint!("Override?(y/n)");
+        let mut tmp = String::new();
+        std::io::stdin().read_line(&mut tmp);
+        if tmp.trim().starts_with('y') == false{
+          continue;
+        }
       }
       
-      if let Ok(fd) = File::options().write(true).create_new(true).open(line.trim()) {
+      if let Ok(fd) = File::options().write(true).create(true).open(line.trim()) {
         recv(fd, &info[which]);
         break;
       }else{
-        eprintln!("Invalid filename or already exists.")
+        eprintln!("Invalid filename")
       }
     }
   }else{
     let mut t = ShareTask::new(files, 4399, "SomeBody".to_string()).unwrap();
     t.run().unwrap();
-    std::thread::sleep(Duration::from_secs(10212));
+    loop{
+      std::thread::sleep(Duration::from_secs(1000));
+    }
   }
 }
