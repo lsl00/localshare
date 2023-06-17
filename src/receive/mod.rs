@@ -36,7 +36,7 @@ pub fn get_infos() -> std::io::Result<Vec<SingleFile>> {
   let begin_time = std::time::SystemTime::now();
   loop {
     if let Ok(elapsed) = begin_time.elapsed() {
-      if elapsed.as_millis() > 220 {
+      if elapsed.as_millis() > 300 {
         return Ok(result);
       }
     }
