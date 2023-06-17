@@ -38,11 +38,6 @@ pub struct ShareTask{
 }
 
 
-fn random()->u16{
-  (rand::random::<u32>() % 20000) as u16 + 20000
-}
-
-
 
 impl ShareTask {
   pub fn new(filepaths : Vec<String>,port: u16,sharer : String) -> std::io::Result<ShareTask> {
@@ -68,7 +63,7 @@ impl ShareTask {
   }
 
   pub fn run(&mut self) -> std::io::Result<()>{
-    self.broadcast_task = Some(BroadcastTask::new(serde_json::to_string(&self.info)?,random()));
+    self.broadcast_task = Some(BroadcastTask::new(serde_json::to_string(&self.info)?));
     self.mstak = {
       let fps = self.filepaths.clone();
       let port = self.port;
@@ -113,9 +108,9 @@ pub struct BroadcastTask{
 }
 
 impl BroadcastTask {
-  pub fn new(info : String,port:u16) -> BroadcastTask{
+  pub fn new(info : String) -> BroadcastTask{
     BroadcastTask{
-      t : Task::new(move |recv| broadcast(port, info, recv))
+      t : Task::new(move |recv| broadcast(info, recv))
     }
   }
   pub fn stop(self){
@@ -123,9 +118,9 @@ impl BroadcastTask {
   }
 }
 
-pub fn broadcast(port : u16,info : String,recv : mpsc::Receiver<()>)->std::io::Result<()>{
+pub fn broadcast(info : String,recv : mpsc::Receiver<()>)->std::io::Result<()>{
   //use recv to stop thread
-  let sock = UdpSocket::bind(("0.0.0.0",port));
+  let sock = UdpSocket::bind("0.0.0.0:0");
   let sock = match sock {
     Ok(s) => s,
     Err(e) =>{
