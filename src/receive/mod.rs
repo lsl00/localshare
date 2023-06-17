@@ -47,6 +47,7 @@ pub fn get_infos() -> std::io::Result<Vec<SingleFile>> {
     if bt.contains(&ipaddr){
       continue;
     }
+    bt.insert(ipaddr);
     let info = serde_json::from_slice::<Info>(&buf[0..bytes_recv]).unwrap();
     for (i,x) in info.infos.iter().enumerate() {
       result.push(SingleFile{
