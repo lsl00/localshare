@@ -115,11 +115,11 @@ impl Bytes {
 impl Display for Bytes {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 		if self.gb > 0 {
-			write!(f,"{:.1} GB",self.gb as f64 + self.mb as f64 / 102.4)
+			write!(f,"{:.1} GB",self.gb as f64 + self.mb as f64 / 1024.0)
 		}else if self.mb > 0 {
-			write!(f,"{:.1} MB",self.mb as f64 + self.kb as f64 / 102.4)
+			write!(f,"{:.1} MB",self.mb as f64 + self.kb as f64 / 1024.0)
 		}else if self.kb > 0 {
-			write!(f,"{:.1} KB",self.kb as f64 + self.b as f64 / 102.4)
+			write!(f,"{:.1} KB",self.kb as f64 + self.b as f64 / 1024.0)
 		}else{
 			write!(f,"{} B",self.b)
 		}
